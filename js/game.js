@@ -180,15 +180,15 @@ function Canvas() {
       }
       this.myGundaGridList[i].update();
     }
-    if (this.updateCalled % 1000 === 0) {
-      console.log('call bhayo hai');
-      for (const gundaGrid of this.myGundaGridList) {
-        for (const gunda of gundaGrid.gundas) {
-          gunda.velocity = addVectors(gunda.velocity, this.paceIncrement);
-          this.paceIncrement.y += 0.01;
-        }
-      }
-    }
+    // if (this.updateCalled % 1000 === 0) {
+    //   console.log('call bhayo hai');
+    //   for (const gundaGrid of this.myGundaGridList) {
+    //     for (const gunda of gundaGrid.gundas) {
+    //       gunda.velocity = addVectors(gunda.velocity, this.paceIncrement);
+    //       this.paceIncrement.y += 0.01;
+    //     }
+    //   }
+    // }
 
     this.ctx.fillStyle = "#FCE75B";
     this.ctx.font = "18pt san-serif";
