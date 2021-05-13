@@ -1,3 +1,7 @@
+// general idea here is cars show up in a grid in any lane but not covering all 3 lanes
+// if cars overlap in grid it is regenerated so as to not overlap
+// cars move down individually, the grid is just for generation purpose
+// here cars means boxes :)
 
 var WIDTH = 300;
 var HEIGHT = 700;
