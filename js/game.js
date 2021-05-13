@@ -3,7 +3,7 @@
 var WIDTH = 300;
 var HEIGHT = 700;
 var GUNDA_GRID_NUMBER = 3;
-var MY_CANVAS_COLOR = "#fff";
+var MY_CANVAS_COLOR = "#333";
 
 function Vector(x, y) {
   this.x = x;
@@ -46,7 +46,6 @@ function Car(x, y) {
     ) {
       gunda.hasCrossedPlayer = true;
       this.score += 1;
-      console.log(this.score);
     }
   };
 }
@@ -111,6 +110,7 @@ function Canvas() {
   this.canvas.width = WIDTH;
   this.canvas.height = HEIGHT;
   this.canvas.style.background = MY_CANVAS_COLOR;
+  this.paceIncrement = new Vector(0, 0.01);
 
   window.addEventListener("keydown", (event) => {
     if (event.key === "ArrowRight") {
@@ -137,7 +137,6 @@ function Canvas() {
       for (let j = 0; j < gundaGrid.gundas.length; j++) {
         var gunda = gundaGrid.gundas[j];
         gunda.position.y -= 420 * (i + 1);
-        console.log(gunda.velocity);
       }
     }
 
@@ -153,13 +152,12 @@ function Canvas() {
 
   this.update = () => {
     this.updateCalled += 1;
-    if (this.updateCalled % 1000 === 0) {
-      console.log("call bhayo update");
-    }
+
     // clear screen
     this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
 
     // fill player car
+
     this.ctx.fillStyle = this.myCar.color;
     this.ctx.fillRect(this.myCar.position.x, this.myCar.position.y, 100, 100);
 
@@ -181,6 +179,15 @@ function Canvas() {
         this.myGundas.push(gunda);
       }
       this.myGundaGridList[i].update();
+    }
+    if (this.updateCalled % 1000 === 0) {
+      console.log('call bhayo hai');
+      for (const gundaGrid of this.myGundaGridList) {
+        for (const gunda of gundaGrid.gundas) {
+          gunda.velocity = addVectors(gunda.velocity, this.paceIncrement);
+          this.paceIncrement.y += 0.01;
+        }
+      }
     }
 
     this.ctx.fillStyle = "#FCE75B";
@@ -229,7 +236,8 @@ function Canvas() {
     this.ctx.fillRect(0, 0, WIDTH, HEIGHT);
     this.ctx.fillStyle = "red";
     this.ctx.font = "18pt san-serif";
-    this.ctx.fillText("CAR GAME", 80, 350);
+    this.ctx.fillText("CAR GAME", 80, 325);
+    this.ctx.fillText("CROSS CARS THEN MOVE", 4, 350);
     this.ctx.fillText("SPACE TO START", 50, 375);
     this.ctx.fillText("ARROW KEY", 75, 425);
     this.ctx.fillText("FOR CONTROL", 65, 450);
