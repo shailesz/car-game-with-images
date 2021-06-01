@@ -1,8 +1,3 @@
-// general idea here is cars show up in a grid in any lane but not covering all 3 lanes
-// if cars overlap in grid it is regenerated so as to not overlap
-// cars move down individually, the grid is just for generation purpose
-// here cars means boxes :)
-
 var WIDTH = 300;
 var HEIGHT = 700;
 var GUNDA_GRID_NUMBER = 3;
@@ -20,6 +15,10 @@ function Car(x, y) {
   this.color = "#000";
   this.hasCrashed = false;
   this.score = 0;
+
+  this.carImageSrc = "./images/car.png";
+  this.carSprite = new Image();
+  this.carSprite.src = this.carImageSrc;
 
   this.moveRight = () => {
     if (this.position.x !== 200) {
@@ -61,6 +60,10 @@ function Gunda() {
   this.height = 100;
   this.hasCrossedPlayer = false;
 
+  this.gundaImageSrc = "./images/gunda.png";
+  this.gundaSprite = new Image();
+  this.gundaSprite.src = this.gundaImageSrc;
+
   this.update = () => {
     this.position = addVectors(this.position, this.velocity);
   };
@@ -83,6 +86,7 @@ function GundaGrid() {
     }
     return gundas;
   };
+
   this.gundas = generateGundas();
 
   this.isGundaGridGone = () => {
@@ -105,10 +109,11 @@ function GundaGrid() {
 }
 
 function Canvas() {
+  var gameDiv = document.querySelector("#game");
   this.updateCalled = 0;
   this.canvas = document.createElement("canvas");
   this.ctx = this.canvas.getContext("2d");
-  document.body.appendChild(this.canvas);
+  gameDiv.appendChild(this.canvas);
 
   this.canvas.width = WIDTH;
   this.canvas.height = HEIGHT;
@@ -160,9 +165,13 @@ function Canvas() {
     this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
 
     // fill player car
-
-    this.ctx.fillStyle = this.myCar.color;
-    this.ctx.fillRect(this.myCar.position.x, this.myCar.position.y, 100, 100);
+    this.ctx.drawImage(
+      this.myCar.carSprite,
+      this.myCar.position.x,
+      this.myCar.position.y,
+      100,
+      100
+    );
 
     // player/gunda interaction
     for (var i = 0; i < this.myGundas.length; i++) {
@@ -176,22 +185,22 @@ function Canvas() {
       var myGundaGrid = this.myGundaGridList[i].gundas;
       for (var j = 0; j < myGundaGrid.length; j++) {
         var gunda = this.myGundaGridList[i].gundas[j];
-        this.ctx.fillStyle = gunda.color;
-        this.ctx.fillRect(gunda.position.x, gunda.position.y, 100, 100);
+
+        this.ctx.save();
+        this.ctx.drawImage(
+          gunda.gundaSprite,
+          gunda.position.x,
+          gunda.position.y,
+          100,
+          100
+        );
+        this.ctx.restore();
+
         gunda.update();
         this.myGundas.push(gunda);
       }
       this.myGundaGridList[i].update();
     }
-    // if (this.updateCalled % 1000 === 0) {
-    //   console.log('call bhayo hai');
-    //   for (const gundaGrid of this.myGundaGridList) {
-    //     for (const gunda of gundaGrid.gundas) {
-    //       gunda.velocity = addVectors(gunda.velocity, this.paceIncrement);
-    //       this.paceIncrement.y += 0.01;
-    //     }
-    //   }
-    // }
 
     this.ctx.fillStyle = "#FCE75B";
     this.ctx.font = "18pt san-serif";
